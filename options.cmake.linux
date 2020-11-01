@@ -1,0 +1,14 @@
+# ======= MKL =======
+set(MKL_INCLUDE_PATH "/usr/include/mkl")
+set(MKL_LIBRARIES
+    "-Wl,--start-group"
+    /usr/lib/x86_64-linux-gnu/libmkl_intel_ilp64.a
+    /usr/lib/x86_64-linux-gnu/libmkl_gnu_thread.a
+    /usr/lib/x86_64-linux-gnu/libmkl_core.a
+    "-Wl,--end-group"
+    -lgomp -lpthread -lm -ldl
+)
+
+# ======= CLANG =======
+set(CLANG_INCLUDE_PATH "/usr/lib/llvm-10/include")  # Optional
+set(CLANG_LIBRARIES "/usr/lib/x86_64-linux-gnu/libclang-10.so")

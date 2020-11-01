@@ -1,0 +1,15 @@
+# ======= MKL =======
+set(INTEL_ROOT "C:/Program Files (x86)/Intel/oneAPI")
+set(MKL_ROOT "${INTEL_ROOT}/mkl/latest")
+set(MKL_INCLUDE_PATH "${MKL_ROOT}/include")
+set(MKL_LIBRARY_PATH "${MKL_ROOT}/lib/intel64")
+set(MKL_LIBRARIES
+    "${MKL_LIBRARY_PATH}/mkl_intel_ilp64.lib"
+    "${MKL_LIBRARY_PATH}/mkl_intel_thread.lib"
+    "${MKL_LIBRARY_PATH}/mkl_core.lib"
+    "${INTEL_ROOT}/compiler/latest/windows/compiler/lib/intel64_win/libiomp5md.lib"
+    )
+# ======= CLANG =======
+set(CLANG_ROOT "$ENV{USERPROFILE}/scoop/apps/llvm/11.0.0")
+set(CLANG_INCLUDE_PATH "${CLANG_ROOT}/include")
+set(CLANG_LIBRARIES "${CLANG_ROOT}/lib/libclang.lib")
