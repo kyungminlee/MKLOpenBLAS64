@@ -30,7 +30,7 @@ $ cmake -B build
 $ cmake --build build 
 ```
 Now replace Julia's `libopenblas64_.so` (`.dylib` on macOS, `.dll` on Windows) with the generated `libmklopenblas64_.so`.
-
+If you are on Windows using `mkl_intel_thread`, you should also copy `libiomp5.dll` to your Julia's `bin` directory.
 
 ## Advanced Installation
 
