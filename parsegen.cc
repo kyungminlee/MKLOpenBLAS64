@@ -62,48 +62,50 @@ parse(CXCursor c, CXCursor parent, void * client_data)
         return CXChildVisit_Continue;
     }
 
+    std::vector<std::string> callers;
     if (contains(openblas64_exports, stem + "64_")) {
-        caller = stem + "64_";
-    } else if (contains(openblas64_exports, stem + "_64_")) {
-        caller = stem + "_64_";
-    } else {
-        return CXChildVisit_Continue;
+        callers.push_back(stem + "64_");
+    } 
+    if (contains(openblas64_exports, stem + "_64_")) {
+        callers.push_back(stem + "_64_");
     }
 
-    if (contains(*p_defined, caller)) {
-        return CXChildVisit_Continue;
-    }
-    p_defined->insert(caller);
+    for(auto const & caller: callers) {
+        if (contains(*p_defined, caller)) {
+            continue;
+        }
+        p_defined->insert(caller);
 
-    auto type = clang_getCursorType(c);
-    auto nargs = clang_Cursor_getNumArguments(c);
+        auto type = clang_getCursorType(c);
+        auto nargs = clang_Cursor_getNumArguments(c);
 
-    fmt::print(output_file, "API_EXPORT\n");
-    fmt::print(output_file, "{}\n", clang_getTypeSpelling(clang_getResultType(type)));
+        fmt::print(output_file, "API_EXPORT\n");
+        fmt::print(output_file, "{}\n", clang_getTypeSpelling(clang_getResultType(type)));
 
-    fmt::print(output_file, "{}(", caller);
-    for (decltype(nargs) i = 0 ; i < nargs ; ++i) {
-        auto arg = clang_Cursor_getArgument(c, i);
-        fmt::print(output_file, "{}{} {}", 
-            i == 0 ? "" : ", ",
-            clang_getTypeSpelling(clang_getArgType(type, i)),
-            clang_getCursorSpelling(arg)
-        );
-    }
-    fmt::print(output_file, ")\n");
+        fmt::print(output_file, "{}(", caller);
+        for (decltype(nargs) i = 0 ; i < nargs ; ++i) {
+            auto arg = clang_Cursor_getArgument(c, i);
+            fmt::print(output_file, "{}{} {}", 
+                i == 0 ? "" : ", ",
+                clang_getTypeSpelling(clang_getArgType(type, i)),
+                clang_getCursorSpelling(arg)
+            );
+        }
+        fmt::print(output_file, ")\n");
 
-    fmt::print(output_file, "{{\n");
-    if (strcmp(clang_getCString(clang_getTypeSpelling(clang_getResultType(type))), "void") == 0) {
-        fmt::print(output_file, "  {}(", callee);
-    } else {
-        fmt::print(output_file, "  return {}(", callee);
+        fmt::print(output_file, "{{\n");
+        if (strcmp(clang_getCString(clang_getTypeSpelling(clang_getResultType(type))), "void") == 0) {
+            fmt::print(output_file, "  {}(", callee);
+        } else {
+            fmt::print(output_file, "  return {}(", callee);
+        }
+        for (decltype(nargs) i = 0 ; i < nargs ; ++i) {
+            auto arg = clang_Cursor_getArgument(c, i);
+            fmt::print(output_file, "{}{}", (i == 0 ? "" : ", "), clang_getCursorSpelling(arg));
+        }
+        fmt::print(output_file, ");\n");
+        fmt::print(output_file, "}}\n\n");
     }
-    for (decltype(nargs) i = 0 ; i < nargs ; ++i) {
-        auto arg = clang_Cursor_getArgument(c, i);
-        fmt::print(output_file, "{}{}", (i == 0 ? "" : ", "), clang_getCursorSpelling(arg));
-    }
-    fmt::print(output_file, ");\n");
-    fmt::print(output_file, "}}\n\n");
 
     return CXChildVisit_Continue;
 }
