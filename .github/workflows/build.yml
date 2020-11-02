@@ -18,13 +18,13 @@ jobs:
       - name: Pre-Generate
         run: |
           git submodule update --init
-          cd data
-          bash ./get_symbols.sh
+          nm -D /usr/lib/x86_64-linux-gnu/libmkl_intel_ilp64.so | grep " T " | awk '{ print $3; }' > data/list_ilp64
       - name: Generate
         run: |
           rm mklopenblas64.c
           cmake -B generate
           cmake --build generate
+          ls -al
           head mklopenblas64.c
 
 
