@@ -118,6 +118,10 @@ int main(int argc, char** argv)
     }
     {
         std::ifstream in(argv[2]);
+        if (in.fail()) {
+            fmt::print("failed to load file {}\n", argv[2]);
+            exit(1);
+        }
         string buf;
         while(!in.eof()) {
             in >> buf;
@@ -126,6 +130,10 @@ int main(int argc, char** argv)
     }
     {
         std::ifstream in(argv[3]);
+        if (in.fail()) {
+            fmt::print("failed to load file {}\n", argv[1]);
+            exit(1);
+        }
         string buf;
         while(!in.eof()) {
             in >> buf;
@@ -158,4 +166,5 @@ int main(int argc, char** argv)
     for (int i = 4 ; i < argc ; ++i) {
         process(argv[i]);
     }
+    fclose(output_file);
 }
