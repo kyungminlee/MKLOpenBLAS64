@@ -24,8 +24,6 @@ jobs:
           rm mklopenblas64.c
           cmake -B generate
           cmake --build generate
-          ls -al
+          wc -l mklopenblas64.c
           head mklopenblas64.c
-
-
-          
+          tail mklopenblas64.c
