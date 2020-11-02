@@ -29,7 +29,7 @@ When you want to generate `mklopenblas64.c` yourself, see [Advanced Installation
 $ cmake -B build
 $ cmake --build build 
 ```
-Now replace Julia's `libopenblas64_.so` (or a different version) with the generated `libmklopenblas64_.so` (or `libmklopenblas64_.dll` on Windows).
+Now replace Julia's `libopenblas64_.so` (`.dylib` on macOS, `.dll` on Windows) with the generated `libmklopenblas64_.so`.
 
 
 ## Advanced Installation
